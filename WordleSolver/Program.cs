@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using LeggySetLib;
+
+string[] allWords = File.ReadAllLines("words.txt");
+
+ISet<int> badCharacters = new BinarySet64(0,25);
+
