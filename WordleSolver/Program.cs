@@ -46,7 +46,9 @@ IEnumerable<string> getGuesses()
     }
 }
 
-char?[] knownLetters = { null, null, null, null, null, null };
+char?[] knownLetters = { null, null, null, null, null };
+
+string[] misplacedLetters = { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
 string? getGuess()
 {
@@ -56,7 +58,9 @@ string? getGuess()
         bool canBeThisWord = true;
         for(int i = 0; i < guess.Length; i++)
         {
-            if (knownLetters[i]!=null && knownLetters[i] != guess[i])
+            bool doesntHaveRequiredLetter = knownLetters[i] != null && knownLetters[i] != guess[i];
+            bool letterCantBeHere = misplacedLetters[i].Contains(guess[i]);
+            if (doesntHaveRequiredLetter || letterCantBeHere)
             {
                 canBeThisWord = false;
                 break;
@@ -80,7 +84,7 @@ string lastGuess = "audio";
 void getInput()
 {
     Console.Write("Input letters that are not in the word: (e.g. asdf)\n");
-    string input = Console.ReadLine();
+    string? input = Console.ReadLine();
     foreach (char character in input.ToLower())
     {
         badCharacters.Add(getNumber(character));
@@ -99,6 +103,13 @@ void getInput()
     {
         int index = int.Parse(character.ToString());
         knownLetters[index] = lastGuess[index];
+    }
+    for(int i = 0; i < 5; i++)
+    {
+        if (knownLetters[i]==null)
+        {
+            misplacedLetters[i] += lastGuess[i];
+        }
     }
 }
 
