@@ -35,13 +35,36 @@ bool couldBeThisWord(string word)
     return true;
 }
 
-string? getGuess()
+IEnumerable<string> getGuesses()
 {
     foreach(string word in allWords)
     {
         if(couldBeThisWord(word))
         {
-            return word;
+            yield return word;
+        }
+    }
+}
+
+char?[] knownLetters = { null, null, null, null, null, null };
+
+string? getGuess()
+{
+    IEnumerable<string> guesses = getGuesses();
+    foreach(string guess in guesses)
+    {
+        bool canBeThisWord = true;
+        for(int i = 0; i < guess.Length; i++)
+        {
+            if (knownLetters[i]!=null && knownLetters[i] != guess[i])
+            {
+                canBeThisWord = false;
+                break;
+            }
+        }
+        if (canBeThisWord)
+        {
+            return guess;
         }
     }
     return null;
@@ -69,6 +92,13 @@ void getInput()
         {
             goodCharacters.Add(charNumber);
         }
+    }
+    Console.WriteLine("Which letters are in the right place? (give indexes like this: 034)");
+    input = Console.ReadLine();
+    foreach(char character in input)
+    {
+        int index = int.Parse(character.ToString());
+        knownLetters[index] = lastGuess[index];
     }
 }
 
